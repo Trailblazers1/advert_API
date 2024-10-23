@@ -54,7 +54,7 @@ export const loginUser = async(req,res,next) => {
     //Compare their passwords
     const correctPassword = bcrypt.compareSync(value.password, user.password);
     if (!correctPassword){
-        return res.status(401).json('Ivalid Crendentials!');
+        return res.status(401).json('Invalid Crendentials!');
     }
     // Sign a token for  user
     const token = jwt.sign(

@@ -25,7 +25,7 @@ export const hasPermission = (action) => {
                 res.status(403).json('Action not allowed');
             }
         } catch (error) {
-            next(error)
+            next(error);
         }
     }
 }

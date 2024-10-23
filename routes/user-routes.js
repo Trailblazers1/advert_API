@@ -12,7 +12,7 @@ userRouter.post("/users/register",registerUser);
 
 userRouter.post("/users/login", loginUser);
 
-userRouter.get("users/me", isAuthenticated,hasPermission('get_profile'),getProfile);
+userRouter.get("/users/me", isAuthenticated,hasPermission('get_profile'),getProfile);
 
 userRouter.post("/users/logout",isAuthenticated,logoutUser);
 

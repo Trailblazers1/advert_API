@@ -3,8 +3,8 @@ export const permissions = [
         role: 'user',
         actions: [
             'get_oneadvert',
-             'get_alladverts'
-
+            'get_alladverts',
+            'get_profile'
         ]
     },
 
