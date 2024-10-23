@@ -1,24 +1,27 @@
 import { Router } from "express";
-import { addAdvert, deleteAdvert, getAllAdverts, getOneAdvert, updateAdvert } from "../controllers/advert-controllers.js";
+import { addAdvert, countAdverts, deleteAdvert, getAllAdverts, getOneAdvert, updateAdvert } from "../controllers/advert-controllers.js";
 import { advertIconUpload } from "../middlewares/upload-middlewares.js";
-// import { advertValidate, updateAdvertValidate } from "../validators/advert-validators.js";
+import { hasPermission, isAuthenticated } from "../middlewares/auth-middlewares.js";
+
 
 // create a router for the router
 const advertRouter = Router();
 
 
 // define routes 
-advertRouter.post("/adverts", advertIconUpload.single("icon"), addAdvert);
+advertRouter.post("/adverts", isAuthenticated,hasPermission('add_advert'), advertIconUpload.single("icon"), addAdvert);
 
-advertRouter.get("/adverts", getAllAdverts);
+advertRouter.get("/adverts", isAuthenticated,hasPermission('get_alladverts'), getAllAdverts);
 
-advertRouter.get("/adverts/:id", getOneAdvert);
+advertRouter.get("/adverts/count", isAuthenticated,hasPermission('count_advert'), countAdverts);
 
-advertRouter.patch("/adverts/:id", advertIconUpload.single("icon"), updateAdvert);
+advertRouter.get("/adverts/:id", isAuthenticated, hasPermission('get_oneadvert') ,getOneAdvert);
 
-advertRouter.delete("/adverts/:id", deleteAdvert);
+advertRouter.patch("/adverts/:id", isAuthenticated,hasPermission( 'update_advert') ,advertIconUpload.single("icon"), updateAdvert);
 
-// export router
+advertRouter.delete("/adverts/:id", isAuthenticated, hasPermission('delete_advert'),deleteAdvert);
+
+// Export router
 export default advertRouter;
 
 

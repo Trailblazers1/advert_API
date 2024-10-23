@@ -1,5 +1,8 @@
-import { UserModel } from "../models/user-models.js";
 import { loginUserValidator, registerUserValidator, updateProfileValidator } from "../validators/user-validators.js";
+import { UserModel } from "../models/user-models.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { mailTransporter } from "../utils/mail.js";
 
 // Register, Login, Logout
 export const registerUser = async(req,res,next)=>{
@@ -15,7 +18,7 @@ export const registerUser = async(req,res,next)=>{
             return res.status(409).json('User already exist!');
         }
         // Hash their password
-        const hashedPassword = bycrypt.hashSync(value.password, 10);
+        const hashedPassword = bcrypt.hashSync(value.password, 10);
         //Save the user into database
         await mailTransporter.sendMail({
             to: value.email,
@@ -28,7 +31,7 @@ export const registerUser = async(req,res,next)=>{
             password: hashedPassword
         });
 res.json({
-    message:'User egistered!'
+    message:'User registered!'
 });
         
     } catch (error) {
@@ -53,10 +56,18 @@ export const loginUser = async(req,res,next) => {
     if (!correctPassword){
         return res.status(401).json('Ivalid Crendentials!');
     }
-    // add code for token
+    // Sign a token for  user
+    const token = jwt.sign(
+        {id:user.id}, 
+        process.env.JWT_PRIVATE_KEY,
+        {expiresIn:'24h' /* it can be 1d or 1m*/ }
+    );
 
     // Respond to request
-    // undone
+    res.json({
+        message: 'User Logged In',
+        accessToken: token
+    });
     } catch (error) {
      next(error)   
     }
@@ -65,8 +76,10 @@ export const loginUser = async(req,res,next) => {
 export const getProfile = async (req,res,next)=>{
     try {
         // Find authentication user from database
-        const user = await UserModel.findById()
-        // undone
+        const user = await UserModel.findById(req.auth.id)
+        .select({password: false});
+         // Respond to request
+         res.json(user);
     } catch (error) {
        next(error) ;
     }
