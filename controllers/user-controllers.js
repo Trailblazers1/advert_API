@@ -1,8 +1,10 @@
 import { loginUserValidator, registerUserValidator, updateProfileValidator } from "../validators/user-validators.js";
 import { UserModel } from "../models/user-models.js";
+import { AdvertModel } from "../models/advert-models.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { mailTransporter } from "../utils/mail.js";
+
 
 // Register, Login, Logout
 export const registerUser = async(req,res,next)=>{
@@ -80,6 +82,26 @@ export const getProfile = async (req,res,next)=>{
         .select({password: false});
          // Respond to request
          res.json(user);
+    } catch (error) {
+       next(error) ;
+    }
+}
+
+export const getUserAdverts = async (req,res,next)=>{
+    try {
+        const { filter = "{}",sort="{}", limit = 20,
+            skip = 0 } = req.query;
+  
+        // Fetch all Adverts from database
+        const allAdverts = await AdvertModel.find({
+            ...JSON.parse(filter),
+            user: req.auth.id
+        })
+        .sort(JSON.parse(sort))
+        .limit(limit)
+        .skip(skip);
+        // return response
+        res.status(200).json(allAdverts);
     } catch (error) {
        next(error) ;
     }
