@@ -63,19 +63,8 @@ export const countAdverts = async (req, res, next) => {
     }
    }
 // get one advert by ID
-export  const getOneAdvert = async(req,res,next)=>{
-    try {
-        const oneAdvert = await AdvertModel.findOne({_id:req.params.id, user: req.auth.id},{new: true});
 
-        if (!getOneAdvert){
-            return res.status(404).json('Ad not available')
-        }
-        res.status(201).json(oneAdvert);
-    } catch (error) {
-        next (error)
-    }
-}
-/*export const getOneAdvert = async (req, res, next) => {
+export const getOneAdvert = async (req, res, next) => {
 
     try {
         const oneAdvert = await AdvertModel.findById(req.params.id);
@@ -85,7 +74,7 @@ export  const getOneAdvert = async(req,res,next)=>{
         next(error);
 
     }
-};*/
+};
 
 // update an advert
 export const updateAdvert = async (req, res, next) => {
