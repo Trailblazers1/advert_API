@@ -72,7 +72,11 @@ export const countAdverts = async (req, res, next) => {
 export const getOneAdvert = async (req, res, next) => {
 
     try {
-        const oneAdvert = await AdvertModel.findById(req.params.id);
+        const oneAdvert = await AdvertModel.findOne({_id: req.params.id, user: req.auth.id});/*findById(req.params.id);*/
+
+        if(!advert){
+            return res.status(404).json('Advert not found or you do not have permission to view it.');
+        }
         res.status(201).json(oneAdvert);
 
     } catch (error) {
