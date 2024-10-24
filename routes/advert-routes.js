@@ -11,11 +11,11 @@ const advertRouter = Router();
 // define routes 
 advertRouter.post("/adverts", isAuthenticated,hasPermission('add_advert'), advertIconUpload.single("icon"), addAdvert);
 
-advertRouter.get("/adverts", isAuthenticated,hasPermission('get_alladverts'), getAllAdverts);
+advertRouter.get("/adverts",  getAllAdverts);
 
 advertRouter.get("/adverts/count", isAuthenticated,hasPermission('count_advert'), countAdverts);
 
-advertRouter.get("/adverts/:id", isAuthenticated, hasPermission('get_oneadvert') ,getOneAdvert);
+advertRouter.get("/adverts/:id", getOneAdvert);
 
 advertRouter.patch("/adverts/:id", isAuthenticated,hasPermission( 'update_advert') ,advertIconUpload.single("icon"), updateAdvert);
 
