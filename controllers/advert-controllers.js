@@ -38,7 +38,12 @@ export const getAllAdverts = async (req, res, next) => {
     try {
         const { filter = "{}",sort="{}", limit = 10,
             skip = 0 } = req.query;
-            
+          // Get the vendor's ID from the authenticated user
+        const vendorId = req.auth.id; // Ensure req.auth is set by the isAuthenticated middleware
+
+        // Filter the adverts to only show those owned by the logged-in vendor
+        const parsedFilter = { ...JSON.parse(filter), user: vendorId };
+  
         // Fetch all Adverts from database
         const allAdverts = await AdvertModel.find(JSON.parse(filter)).sort(JSON.parse(sort)).limit(limit).skip(skip);
         // return response
